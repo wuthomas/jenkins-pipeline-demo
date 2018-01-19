@@ -33,23 +33,22 @@ pipeline {
         }
     }
     stage('Unit test'){
-	    agent {
-		    docker {
-			  image 'python:3.5.4-alpine'
-		    }
-	    }
-	    steps {
-		    sh 'pip install nose nosexcover'
-		    sh 'nosetests --with-xunit'
-		    sh 'nosetests --with-xcoverage'
-		    sh 'pwd'
-		    sh 'ls'
-	    }
-	    post {
-		    always {
-			    junit '*.xml'
-		    }
-	    }
-    }
+      agent {
+        docker {
+	  image 'python:3.5.4-alpine'
+	  }
+	}
+	steps {
+	  sh 'pip install nose nosexcover'
+	  sh 'nosetests  --with-xcoverage --with-xunit'
+	  sh 'pwd'
+	  sh 'ls'
+	}
+	post {
+	  always {
+	    junit '*.xml'
+	  }
+	}
+     }
   }
 }
