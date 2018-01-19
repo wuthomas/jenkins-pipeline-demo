@@ -22,14 +22,33 @@ pipeline {
     stage('Test') {
         agent any
         steps{
-            sh 'docker run --rm -d  --name $BUILD_TAG -p 81:80 epas:flask'
-            sh 'curl -v `docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" $BUILD_TAG` 81'
+            sh 'docker run --rm -d  --name $BUILD_TAG -p 80:80 epas:flask'
+            sleep 5
+            sh 'curl -v `docker inspect --format="{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}" $BUILD_TAG`'
         }
         post {
             always {
                 sh 'docker stop $BUILD_TAG'
             }
         }
+    }
+    stage('Unit test'){
+	    agent {
+		    docker {
+			  image 'python:3.5.4-alpine'
+		    }
+	    }
+	    steps {
+		    sh 'pip install nose nosexcover'
+		    sh 'nosetests --with-xcoverage --with-xunit'
+		    sh 'pwd'
+		    sh 'ls'
+	    }
+	    post {
+		    always {
+			    junit '*.xml'
+		    }
+	    }
     }
   }
 }
