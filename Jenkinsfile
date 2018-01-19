@@ -40,7 +40,8 @@ pipeline {
 	    }
 	    steps {
 		    sh 'pip install nose nosexcover'
-		    sh 'nosetests --with-xcoverage --with-xunit'
+		    sh 'nosetests --with-xunit'
+		    sh 'nosetests --with-xcoverage'
 		    sh 'pwd'
 		    sh 'ls'
 	    }
