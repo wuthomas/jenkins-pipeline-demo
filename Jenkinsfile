@@ -13,12 +13,13 @@ pipeline {
         sh 'ls -al'
         sh 'pwd'
       }
-      post{
+      post {
         always {
           sh 'printenv'
         }
       }
-      stage('Test') {
+    }
+    stage('Test') {
         agent any
         steps{
             sh 'docker run --rm -d  --name $BUILD_TAG -p 80:80 epas:flask'
@@ -29,7 +30,6 @@ pipeline {
                 sh 'docker stop $BUILD_TAG'
             }
         }
-    }
     }
   }
 }
